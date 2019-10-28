@@ -10,6 +10,25 @@
 *-----------------------------------------------------------------------------*/
 
 #include <stdio.h>
+#include <stdlib.h>
+#define MAXLISTSIZE 1024
+
+typedef struct
+{
+    int data[MAXLISTSIZE];
+    int last;
+}linearlist;
+
+void ListList(linearlist * list)
+{
+    int i;
+    printf("Current linear list status:\n");
+    if (list->last ==0) printf("Empty linear list!");
+    else
+        for(i = 0;i < (list->last); i++)
+            printf("[%4d]", list->data[i]);
+    printf("\n");
+}
 
 int main()
 {

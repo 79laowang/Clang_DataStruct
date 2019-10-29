@@ -37,9 +37,21 @@ int main()
     char array[MAX];
     int count;
     printf("Input string to be sorted:\n");
-    gets(array);
-    /* fgets(array, sizeof(array), stdin); */
-    count=strlen(array);
-    bubble(array,count);
+    /* gets(array); */
+    /* Obsleted function gets, using following handle the newline of end from fgets function */
+	int i;
+	while (fgets(array, MAX, stdin)!=NULL && array[0]!='\n')
+	{
+		i = 0;
+	    while(array[i]!='\n' && array[i]!='\0')
+			i++;
+		if(array[i]=='\n')
+			array[i]='\0';
+		else
+			while(getchar()!='\n')
+				continue;
+        count=strlen(array);
+        bubble(array,count);
+	}
     return (0);
 }

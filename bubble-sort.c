@@ -19,15 +19,17 @@ void bubble(char *arr,int count)
 {
     int i,j;
     char temp;
-    for(j=count;j>1;j--)
-    {
+    for(j=count;j>1;j--) {
+        int count = 0;
         for(i=0;i<j-1;i++)
             if(arr[i+1]<arr[i])
             {
                 temp=arr[i+1];
                 arr[i+1]=arr[i];
                 arr[i]=temp;
+                count++;
             }
+        if (count) break;
     }
     printf("Sorted output:[%s]\n",arr);
 }

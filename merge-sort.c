@@ -18,7 +18,7 @@
  * a[]  待排序数组
  * dest[] 保存合并后数据 
  * start 数组序列的起始序号
- * end 数组序列的结束序号
+ * end 第一个数组序列的结束序号
  * n 有序列的长度
  */
 void merge_step(int a[], int dest[], int start, int end, int n)
@@ -26,8 +26,8 @@ void merge_step(int a[], int dest[], int start, int end, int n)
     int i, j, k;
     i = k = start;
     j =  end + 1;
-    while (i <= end && j <= n) { //当两个有序段都没有结束时，循环比较
-        if (a[i] <= a[j])  //将教小的元素复制到dest数组中
+    while (i <= end && j <= n) { //当两个有序段都还有数据，没有结束时，循环比较
+        if (a[i] <= a[j])  //将较小的元素复制到dest数组中
             dest[k++] = a[i++];
         else
             dest[k++] = a[j++];

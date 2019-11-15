@@ -36,9 +36,9 @@ void MergeSort_UptoDown(int *num, int start, int end)
 void Merge(int *num, int start, int mid, int end)
 {
     int *temp = (int *)malloc((end-start+1) * sizeof(int));    //申请空间来存放两个有序区归并后的临时区域
-    int i = start;
-    int j = mid + 1;
-    int k = 0;
+    int i = start;  // 第一个合并序列的数组索引
+    int j = mid + 1;  //第二个合并序列的数组索引
+    int k = 0;        //临时存储数组索引
 
     while (i <= mid && j <= end) {
         if (num[i] <= num[j])
@@ -51,10 +51,10 @@ void Merge(int *num, int start, int mid, int end)
         }
     }
 
-    while (i <= mid) {
+    while (i <= mid) {  // 将第一个合并序列的剩余数据，添加到临时存储
         temp[k++] = num[i++];
     }
-    while (j <= end) {
+    while (j <= end) {  // 第二个合并序列的剩余数据，添加到临时区域
         temp[k++] = num[j++];
     }
 

@@ -14,61 +14,79 @@
 
 #define N 10
 
-void merge_step(int a[], int r[], int start, int mid, int end)
+/* 相邻有序段合并
+ * a[]  待排序数组
+ * dest[] 保存合并后数据 
+ * start 数组序列的起始序号
+ * end 数组序列的结束序号
+ * n 有序列的长度
+ */
+void merge_step(int a[], int dest[], int start, int end, int n)
 {
     int i, j, k;
     i = k = start;
-    j = mid + 1;
-    while (i <= mid && j <= end) {
-        if (a[i] <= a[j])
-            r[k++] = a[i++];
+    j =  end + 1;
+    while (i <= end && j <= n) { //当两个有序段都没有结束时，循环比较
+        if (a[i] <= a[j])  //将教小的元素复制到dest数组中
+            dest[k++] = a[i++];
         else
-            r[k++] = a[j++];
+            dest[k++] = a[j++];
     }
-    while (i <= mid)
-        r[k++] = a[i++];
-    while (j <= end)
-        r[k++] = a[j++];
+    while (i <= end)  //将第一个未合并的部分复制到dest数组中
+        dest[k++] = a[i++];
+    while (j <= n)  //将第二个未合并的部分复制到dest数组中
+        dest[k++] = a[j++];
 }
 
-void merge_pass(int a[], int r[], int n, int len)
+/* 完成一次二路归并
+ * a[]  待排序数组
+ * dest[] 保存合并后数据 
+ * n 待排序数组中进行排序的元素总数
+ * len 有序列表的长度
+ */
+void merge_pass(int a[], int dest[], int n, int len)
 {
-    int s, e;
-    s = 0;
-    while (s + len < n) {
-        e = s + 2 * len - 1;
-        if (e >= n)
-            e = n - 1;
-        merge_step(a, r, s, s+len-1, e);
-        s = e + 1;
+    int start = 0, end; //start:第一个序列的起始序号,end:第一个序列的结束序号
+    while (start + len < n) {
+        end = start + 2 * len - 1;
+        if (end >= n) //若最后一个数据段少于len, 重新计算结束序号
+            end = n - 1;
+        merge_step(a, dest, start, start+len-1, end);  //合并相邻有序段
+        start = end + 1;  //重新计算下一对有序段中左段的开始序号
     }
-    if (s < n)
-        for (; s < n; s++)
-            r[s] = a[s];
+    if (start < n)  //若还剩下一个有序段，从a中复制到dest数组
+        for (; start < n; start++)
+            dest[start] = a[start];
 }
 
+/*
+ * 完成二路归并排序
+ * a[]: 待排序数组
+ * n: 待排序数组长度
+ */
 void merge_sort(int a[], int n)
 {
-    int *p;
-    int len = 1;
-    int f = 0;
-    if (! (p = (int*)malloc(sizeof(int) *n))) {
+    int *temp; //排序额外使用的临时存储空间
+    int len = 1; //有序序列的长度
+    int flag = 0; //发生排序标志位
+    if (! (temp = (int*) malloc(sizeof(int) * n))) { //申请与数组a[]大小的存储空间
         printf("Failed to assign memory!");
         exit(0);
     }
-    while (len < n) {
-        if (f)
-            merge_pass(p, a, n, len);
+    while (len < n) {  //交替在a[],temp之间来回进行合并
+        if (flag)
+            merge_pass(temp, a, n, len);  //把temp合并到a[]
         else
-            merge_pass(a, p, n, len);
-        len *= 2;
-        f = 1 - f;
+            merge_pass(a, temp, n, len);  //把a[]合并到temp
+        len *= 2; //有序序列长度增加一倍
+        flag = 1 - flag;  //使flag值在0和1之间进行切换
     }
-    if (f)
-        for (f = 0; f < n; f++)
-            a[f] = p[f];
-    free(p);
+    if (flag) //若进行了排序
+        for (flag = 0; flag < n; flag++)  //将临时存储空间temp里的数据复制到数组a[]
+            a[flag] = temp[flag];
+    free(temp);  //释放临时存储空间
 }
+
 int main()
 {
     // 非递归实现, 归并排序
